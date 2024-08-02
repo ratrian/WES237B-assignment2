@@ -2,7 +2,7 @@
 
 ## Lab
 
-Chris will be holding two sets of office hours to get started on this.  One will be Monday 7-9pm.  The other will be Wednesday 8-10pm to best accommodate all schedules.
+Chris will be holding two sets of office hours to get started on this.  One will be Monday 7-9pm.  The other will be Thursday 8-10pm to best accommodate all schedules.
 
 ### Loop Demo
 This is the starter code for this project.  It loads a vector from file and sums each element into a single result.  It then saves the final result.
