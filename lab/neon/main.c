@@ -46,17 +46,16 @@ int main(int argc, char *argv[])
     //@@ Modify the below code in the remaining demos
     float sum = 0;
 
-    float32x4_t sumx4 = {0, 0, 0, 0};
-    for (int i = 0; i < rows * cols; i+=4)
+    int numIters = (((rows * cols) / 4) * 4);
+    for (int i = 0; i < numIters; i+=4)
     {
-        float32x4_t datax4 = vld1q_f32(host_a.data + i);
-        sumx4= vaddq_f32(sumx4, datax4);
+        float32x4_t data = vld1q_f32(host_a.data + i);
+        sum += vaddvq_f32(data);
     }
-
-    sum += vgetq_lane_f32(sumx4, 0);
-    sum += vgetq_lane_f32(sumx4, 1);
-    sum += vgetq_lane_f32(sumx4, 2);
-    sum += vgetq_lane_f32(sumx4, 3);
+    for (int i = numIters; i < (rows * cols); i++)
+    {
+        sum += host_a.data[i];
+    }
 
     printf("sum: %f == %f\n", sum, host_b.data[0]);
 

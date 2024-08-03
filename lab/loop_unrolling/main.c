@@ -45,12 +45,17 @@ int main(int argc, char *argv[])
     //@@ Modify the below code in the remaining demos
     float sum = 0;
 
-    for (int i = 0; i < rows * cols; i+=4)
+    int numIters = (((rows * cols) / 4) * 4);
+    for (int i = 0; i < numIters; i+=4)
     {
         sum += host_a.data[i];
         sum += host_a.data[i+1];
         sum += host_a.data[i+2];
         sum += host_a.data[i+3];
+    }
+    for (int i = numIters; i < (rows * cols); i++)
+    {
+        sum += host_a.data[i];
     }
 
     printf("sum: %f == %f\n", sum, host_b.data[0]);
