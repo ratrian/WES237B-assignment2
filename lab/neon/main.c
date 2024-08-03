@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <arm_neon.h>
 
 #include "matrix.h"
 
@@ -45,13 +46,17 @@ int main(int argc, char *argv[])
     //@@ Modify the below code in the remaining demos
     float sum = 0;
 
+    float32x4_t sumx4 = {0, 0, 0, 0};
     for (int i = 0; i < rows * cols; i+=4)
     {
-        sum += host_a.data[i];
-        sum += host_a.data[i+1];
-        sum += host_a.data[i+2];
-        sum += host_a.data[i+3];
+        float32x4_t datax4 = vld1q_f32(host_a.data + i);
+        sumx4= vaddq_f32(sumx4, datax4);
     }
+
+    sum += vgetq_lane_f32(sumx4, 0);
+    sum += vgetq_lane_f32(sumx4, 1);
+    sum += vgetq_lane_f32(sumx4, 2);
+    sum += vgetq_lane_f32(sumx4, 3);
 
     printf("sum: %f == %f\n", sum, host_b.data[0]);
 
