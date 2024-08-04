@@ -13,13 +13,13 @@
 void NaiveMatrixMultiply(Matrix *input0, Matrix *input1, Matrix *result)
 {
     //@@ Insert code to implement naive matrix multiply here
-    for (int i = 0; i < result->shape[0]; i++)
+    for (int row = 0; row < result->shape[0]; row++)
     {
-        for (int j = 0; j < result->shape[1]; j++)
+        for (int col = 0; col < result->shape[1]; col++)
         {
-            for (int k = 0; k < input0->shape[1]; k++)
+            for (int dot = 0; dot < input0->shape[1]; dot++)
             {
-                result->data[i * result->shape[1] + j] += input0->data[i * input0->shape[1] + k] * input1->data[k * input1->shape[1] + j];
+                result->data[row * result->shape[1] + col] += input0->data[row * input0->shape[1] + dot] * input1->data[dot * input1->shape[1] + col];
             }
         }
     }

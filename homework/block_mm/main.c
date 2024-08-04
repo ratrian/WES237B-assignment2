@@ -10,16 +10,25 @@
         exit(EXIT_FAILURE);                           \
     }
 
-void NaiveMatrixMultiply(Matrix *input0, Matrix *input1, Matrix *result)
+void BlockMatrixMultiply(Matrix *input0, Matrix *input1, Matrix *result)
 {
-    //@@ Insert code to implement naive matrix multiply here
-    for (int i = 0; i < result->shape[0]; i++)
+    //@@ Insert code to implement block matrix multiply here
+    int blockSize = 4;
+    for (int row = 0; row < result->shape[0]; row+=blockSize)
     {
-        for (int j = 0; j < result->shape[1]; j++)
+        for (int col = 0; col < result->shape[1]; col+=blockSize)
         {
-            for (int k = 0; k < input0->shape[1]; k++)
+            int numBlockRowIters = ((row + blockSize) <= result->shape[0]) ? (row + blockSize) : (result->shape[0]);
+            for (int blockRow = row; blockRow < numBlockRowIters; blockRow++)
             {
-                result->data[i * result->shape[1] + j] += input0->data[i * input0->shape[1] + k] * input1->data[k * input1->shape[1] + j];
+                int numBlockColIters = ((col + blockSize) <= result->shape[1]) ? (col + blockSize) : (result->shape[1]);
+                for (int blockCol = col; blockCol < numBlockColIters; blockCol++)
+                {
+                    for (int dot = 0; dot < input0->shape[1]; dot++)
+                    {
+                        result->data[blockRow * result->shape[1] + blockCol] += input0->data[blockRow * input0->shape[1] + dot] * input1->data[dot * input1->shape[1] + blockCol];
+                    }
+                }
             }
         }
     }
@@ -64,7 +73,7 @@ int main(int argc, char *argv[])
     host_c.data = (float *)malloc(sizeof(float) * host_c.shape[0] * host_c.shape[1]);
 
     // Call your matrix multiply.
-    NaiveMatrixMultiply(&host_a, &host_b, &host_c);
+    BlockMatrixMultiply(&host_a, &host_b, &host_c);
 
     // Call to print the matrix
     //PrintMatrix(&host_c);
