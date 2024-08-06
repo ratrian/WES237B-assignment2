@@ -19,7 +19,7 @@ void NaiveMatrixMultiply(Matrix *input0, Matrix *input1, Matrix *result)
         {
             for (int i = 0; i < input0->shape[1]; i++)
             {
-                result->data[row * result->shape[1] + col] += input0->data[row * input0->shape[1] + i] * input1->data[i * input1->shape[1] + col];
+                result->data[row * result->shape[1] + col] += (input0->data[row * input0->shape[1] + i] * input1->data[i * input1->shape[1] + col]);
             }
         }
     }

@@ -35,7 +35,7 @@ void BlockMatrixMultiply(Matrix *input0, Matrix *input1, Matrix *result)
                     }
                     for (int i = numIters; i < input0->shape[0]; i++)
                     {
-                        result->data[blockRow * result->shape[1] + blockCol] += input0->data[blockRow * input0->shape[1] + i] * input1->data[i * input1->shape[1] + blockCol];
+                        result->data[blockRow * result->shape[1] + blockCol] += (input0->data[blockRow * input0->shape[1] + i] * input1->data[i * input1->shape[1] + blockCol]);
                     }
                 }
             }

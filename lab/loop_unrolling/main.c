@@ -48,10 +48,10 @@ int main(int argc, char *argv[])
     int numIters = (((rows * cols) / 4) * 4);
     for (int i = 0; i < numIters; i+=4)
     {
-        sum += host_a.data[i];
-        sum += host_a.data[i+1];
-        sum += host_a.data[i+2];
-        sum += host_a.data[i+3];
+        sum += (host_a.data[i]   +
+                host_a.data[i+1] +
+                host_a.data[i+2] +
+                host_a.data[i+3]);
     }
     for (int i = numIters; i < (rows * cols); i++)
     {
