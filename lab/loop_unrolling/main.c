@@ -44,23 +44,17 @@ int main(int argc, char *argv[])
     // Sum all elements of the array
     //@@ Modify the below code in the remaining demos
     float sum = 0;
-
-    int numIters = (((rows * cols) / 4) * 4);
-    for (int i = 0; i < numIters; i+=4)
-    {
-        sum += (host_a.data[i]   +
-                host_a.data[i+1] +
-                host_a.data[i+2] +
-                host_a.data[i+3]);
-    }
-    for (int i = numIters; i < (rows * cols); i++)
+    for (int i = 0; i < (rows * cols); i+=4)
     {
         sum += host_a.data[i];
+        sum += host_a.data[i+1];
+        sum += host_a.data[i+2];
+        sum += host_a.data[i+3];
     }
-
-    printf("sum: %f == %f\n", sum, host_b.data[0]);
-
     output.data[0] = sum;
+
+    CheckMatrix(&host_b, &output);
+
     SaveMatrix(output_file, &output);
 
     // Release host memory

@@ -27,10 +27,10 @@ void BlockMatrixMultiply(Matrix *input0, Matrix *input1, Matrix *result)
                     int numIters = (input0->shape[1] / 4) * 4;
                     for (int i = 0; i < numIters; i+=4)
                     {
-                        result->data[blockRow * result->shape[1] + blockCol] += ((input0->data[blockRow * input0->shape[1] + i]       * input1->data[i * input1->shape[1] + blockCol])       +
-                                                                                 (input0->data[blockRow * input0->shape[1] + (i + 1)] * input1->data[(i + 1) * input1->shape[1] + blockCol]) +
-                                                                                 (input0->data[blockRow * input0->shape[1] + (i + 2)] * input1->data[(i + 2) * input1->shape[1] + blockCol]) +
-                                                                                 (input0->data[blockRow * input0->shape[1] + (i + 3)] * input1->data[(i + 3) * input1->shape[1] + blockCol]));
+                        result->data[blockRow * result->shape[1] + blockCol] += (input0->data[blockRow * input0->shape[1] + i] * input1->data[i * input1->shape[1] + blockCol]);
+                        result->data[blockRow * result->shape[1] + blockCol] += (input0->data[blockRow * input0->shape[1] + (i + 1)] * input1->data[(i + 1) * input1->shape[1] + blockCol]);
+                        result->data[blockRow * result->shape[1] + blockCol] += (input0->data[blockRow * input0->shape[1] + (i + 2)] * input1->data[(i + 2) * input1->shape[1] + blockCol]);
+                        result->data[blockRow * result->shape[1] + blockCol] += (input0->data[blockRow * input0->shape[1] + (i + 3)] * input1->data[(i + 3) * input1->shape[1] + blockCol]);
                     }
                     for (int i = numIters; i < input0->shape[0]; i++)
                     {
