@@ -25,17 +25,30 @@ void BlockMatrixMultiply(Matrix *input0, Matrix *input1, Matrix *result)
                 int numBlockColIters = ((col + blockSize) <= result->shape[1]) ? (col + blockSize) : (result->shape[1]);
                 for (int blockCol = col; blockCol < numBlockColIters; blockCol++)
                 {
-                    int numIters = (input0->shape[1] / 4) * 4;
-                    for (int i = 0; i < numIters; i+=4)
+                    int i;
+                    int numIters = ((input0->shape[1] / 4) * 4);
+                    for (i = 0; i < numIters; i+=4)
                     {
                         float32x4_t data0 = vld1q_f32(input0->data + blockRow * input0->shape[1] + i);
                         float32x4_t data1 = vld1q_f32(input1->data + i * input1->shape[1] + blockCol);
                         float32x4_t data = vmulq_f32(data0, data1);
                         result->data[blockRow * result->shape[1] + blockCol] += vaddvq_f32(data);
                     }
-                    for (int i = numIters; i < input0->shape[0]; i++)
+                    i = numIters;
+                    if ((input0->shape[1] - i) == 1)
                     {
-                        result->data[blockRow * result->shape[1] + blockCol] += (input0->data[blockRow * input0->shape[1] + i] * input1->data[i * input1->shape[1] + blockCol]);
+                        result->data[blockRow * result->shape[1] + blockCol] += (input0->data[blockRow * input0->shape[1] + i]        * input1->data[i       * input1->shape[1] + blockCol]);
+                    }
+                    else if ((input0->shape[1] - i) == 2)
+                    {
+                        result->data[blockRow * result->shape[1] + blockCol] += ((input0->data[blockRow * input0->shape[1] + i]       * input1->data[i       * input1->shape[1] + blockCol]) +
+                                                                                 (input0->data[blockRow * input0->shape[1] + (i + 1)] * input1->data[(i + 1) * input1->shape[1] + blockCol]));
+                    }
+                    else if ((input0->shape[1] - i) == 3)
+                    {
+                        result->data[blockRow * result->shape[1] + blockCol] += ((input0->data[blockRow * input0->shape[1] + i]       * input1->data[i       * input1->shape[1] + blockCol]) +
+                                                                                 (input0->data[blockRow * input0->shape[1] + (i + 1)] * input1->data[(i + 1) * input1->shape[1] + blockCol]) +
+                                                                                 (input0->data[blockRow * input0->shape[1] + (i + 2)] * input1->data[(i + 2) * input1->shape[1] + blockCol]));
                     }
                 }
             }

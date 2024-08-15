@@ -45,10 +45,25 @@ int main(int argc, char *argv[])
     // Sum all elements of the array
     //@@ Modify the below code in the remaining demos
     float sum = 0;
-    for (int i = 0; i < (rows * cols); i+=4)
+    int i;
+    int numIters = (((rows * cols) / 4) * 4);
+    for (i = 0; i < numIters; i+=4)
     {
         float32x4_t data = vld1q_f32(host_a.data + i);
         sum += vaddvq_f32(data);
+    }
+    i = numIters;
+    if (((rows * cols) - i) == 1)
+    {
+        sum += host_a.data[i];
+    }
+    else if (((rows * cols) - i) == 2)
+    {
+        sum += (host_a.data[i] + host_a.data[i + 1]);
+    }
+    else if (((rows * cols) - i) == 3)
+    {
+        sum += (host_a.data[i] + host_a.data[i + 1] + host_a.data[i + 2]);
     }
     output.data[0] = sum;
 
