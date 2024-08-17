@@ -49,7 +49,13 @@ int main(int argc, char *argv[])
     int numIters = (((rows * cols) / 4) * 4);
     for (i = 0; i < numIters; i+=4)
     {
-        float32x4_t data = vld1q_f32(host_a.data + i);
+        float dataPtr[4];
+        dataPtr[0] = host_a.data[i];
+        dataPtr[1] = host_a.data[i + 1];
+        dataPtr[2] = host_a.data[i + 2];
+        dataPtr[3] = host_a.data[i + 3];
+
+        float32x4_t data = vld1q_f32(dataPtr);
         sum += vaddvq_f32(data);
     }
     i = numIters;

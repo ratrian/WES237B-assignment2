@@ -29,8 +29,20 @@ void BlockMatrixMultiply(Matrix *input0, Matrix *input1, Matrix *result)
                     int numIters = ((input0->shape[1] / 4) * 4);
                     for (i = 0; i < numIters; i+=4)
                     {
-                        float32x4_t data0 = vld1q_f32(input0->data + blockRow * input0->shape[1] + i);
-                        float32x4_t data1 = vld1q_f32(input1->data + i * input1->shape[1] + blockCol);
+                        float data0Ptr[4];
+                        data0Ptr[0] = input0->data[blockRow * input0->shape[1] + i];
+                        data0Ptr[1] = input0->data[blockRow * input0->shape[1] + (i + 1)];
+                        data0Ptr[2] = input0->data[blockRow * input0->shape[1] + (i + 2)];
+                        data0Ptr[3] = input0->data[blockRow * input0->shape[1] + (i + 3)];
+                        float32x4_t data0 = vld1q_f32(data0Ptr);
+                        
+                        float data1Ptr[4];
+                        data1Ptr[0] = input1->data[i       * input1->shape[1] + blockCol];
+                        data1Ptr[1] = input1->data[(i + 1) * input1->shape[1] + blockCol];
+                        data1Ptr[2] = input1->data[(i + 2) * input1->shape[1] + blockCol];
+                        data1Ptr[3] = input1->data[(i + 3) * input1->shape[1] + blockCol];
+                        float32x4_t data1 = vld1q_f32(data1Ptr);
+                        
                         float32x4_t data = vmulq_f32(data0, data1);
                         result->data[blockRow * result->shape[1] + blockCol] += vaddvq_f32(data);
                     }
