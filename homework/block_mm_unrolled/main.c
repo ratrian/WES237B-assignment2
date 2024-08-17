@@ -32,9 +32,20 @@ void BlockMatrixMultiply(Matrix *input0, Matrix *input1, Matrix *result)
                         result->data[blockRow * result->shape[1] + blockCol] += (input0->data[blockRow * input0->shape[1] + (i + 2)] * input1->data[(i + 2) * input1->shape[1] + blockCol]);
                         result->data[blockRow * result->shape[1] + blockCol] += (input0->data[blockRow * input0->shape[1] + (i + 3)] * input1->data[(i + 3) * input1->shape[1] + blockCol]);
                     }
-                    for (int i = numIters; i < input0->shape[1]; i++)
+                    if ((input0->shape[1] - numIters) == 3)
                     {
-                        result->data[blockRow * result->shape[1] + blockCol] += (input0->data[blockRow * input0->shape[1] + i]       * input1->data[i       * input1->shape[1] + blockCol]);
+                        result->data[blockRow * result->shape[1] + blockCol] += (input0->data[blockRow * input0->shape[1] + numIters]       * input1->data[numIters       * input1->shape[1] + blockCol]);
+                        result->data[blockRow * result->shape[1] + blockCol] += (input0->data[blockRow * input0->shape[1] + (numIters + 1)] * input1->data[(numIters + 1) * input1->shape[1] + blockCol]);
+                        result->data[blockRow * result->shape[1] + blockCol] += (input0->data[blockRow * input0->shape[1] + (numIters + 2)] * input1->data[(numIters + 2) * input1->shape[1] + blockCol]);
+                    }
+                    else if ((input0->shape[1] - numIters) == 2)
+                    {
+                        result->data[blockRow * result->shape[1] + blockCol] += (input0->data[blockRow * input0->shape[1] + numIters]       * input1->data[numIters       * input1->shape[1] + blockCol]);
+                        result->data[blockRow * result->shape[1] + blockCol] += (input0->data[blockRow * input0->shape[1] + (numIters + 1)] * input1->data[(numIters + 1) * input1->shape[1] + blockCol]);
+                    }
+                    else if ((input0->shape[1] - numIters) == 1)
+                    {
+                        result->data[blockRow * result->shape[1] + blockCol] += (input0->data[blockRow * input0->shape[1] + numIters]       * input1->data[numIters       * input1->shape[1] + blockCol]);
                     }
                 }
             }

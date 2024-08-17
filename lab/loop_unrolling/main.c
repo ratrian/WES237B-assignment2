@@ -48,13 +48,24 @@ int main(int argc, char *argv[])
     for (int i = 0; i < numIters; i+=4)
     {
         sum += host_a.data[i];
-        sum += host_a.data[i+1];
-        sum += host_a.data[i+2];
-        sum += host_a.data[i+3];
+        sum += host_a.data[i + 1];
+        sum += host_a.data[i + 2];
+        sum += host_a.data[i + 3];
     }
-    for (int i = numIters; i < (rows * cols); i++)
+    if (((rows * cols) - numIters) == 3)
     {
-        sum += host_a.data[i];
+        sum += host_a.data[numIters];
+        sum += host_a.data[numIters + 1];
+        sum += host_a.data[numIters + 2];
+    }
+    else if (((rows * cols) - numIters) == 2)
+    {
+        sum += host_a.data[numIters];
+        sum += host_a.data[numIters + 1];
+    }
+    else if (((rows * cols) - numIters) == 1)
+    {
+        sum += host_a.data[numIters];
     }
     output.data[0] = sum;
 
