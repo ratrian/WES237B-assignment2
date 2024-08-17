@@ -45,31 +45,43 @@ int main(int argc, char *argv[])
     // Sum all elements of the array
     //@@ Modify the below code in the remaining demos
     float sum = 0;
-    int i;
     int numIters = (((rows * cols) / 4) * 4);
-    for (i = 0; i < numIters; i+=4)
+    for (int i = 0; i < numIters; i+=4)
     {
-        float dataPtr[4];
-        dataPtr[0] = host_a.data[i];
-        dataPtr[1] = host_a.data[i + 1];
-        dataPtr[2] = host_a.data[i + 2];
-        dataPtr[3] = host_a.data[i + 3];
+        float dataArr[4] = {0, 0, 0, 0};
+        dataArr[0] = host_a.data[i];
+        dataArr[1] = host_a.data[i + 1];
+        dataArr[2] = host_a.data[i + 2];
+        dataArr[3] = host_a.data[i + 3];
 
-        float32x4_t data = vld1q_f32(dataPtr);
+        float32x4_t data = vld1q_f32(dataArr);
+
         sum += vaddvq_f32(data);
     }
-    i = numIters;
-    if (((rows * cols) - i) == 1)
+    if (((rows * cols) - numIters) == 3)
     {
-        sum += host_a.data[i];
+        float dataArr[4] = {0, 0, 0, 0};
+        dataArr[0] = host_a.data[numIters];
+        dataArr[1] = host_a.data[numIters + 1];
+        dataArr[2] = host_a.data[numIters + 2];
+
+        float32x4_t data = vld1q_f32(dataArr);
+
+        sum += vaddvq_f32(data);
     }
-    else if (((rows * cols) - i) == 2)
+    else if (((rows * cols) - numIters) == 2)
     {
-        sum += (host_a.data[i] + host_a.data[i + 1]);
+        float dataArr[4] = {0, 0, 0, 0};
+        dataArr[0] = host_a.data[numIters];
+        dataArr[1] = host_a.data[numIters + 1];
+
+        float32x4_t data = vld1q_f32(dataArr);
+
+        sum += vaddvq_f32(data);
     }
-    else if (((rows * cols) - i) == 3)
+    else if (((rows * cols) - numIters) == 1)
     {
-        sum += (host_a.data[i] + host_a.data[i + 1] + host_a.data[i + 2]);
+        sum += host_a.data[numIters];
     }
     output.data[0] = sum;
 
