@@ -1,4 +1,4 @@
-# Assignment 2 (assigned 7/27, due 8/12)
+# Assignment 2 (assigned 7/27, due 8/18)
 
 ## Lab
 
